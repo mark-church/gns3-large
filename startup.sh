@@ -58,5 +58,7 @@ else
     /bin/bash
 fi
 
+rm /run/xrdp/*
+service xrdp restart
 
 

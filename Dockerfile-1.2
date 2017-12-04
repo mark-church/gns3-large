@@ -1,0 +1,20 @@
+# Usage instructions at https://github.com/digiampietro/gns3-large
+
+FROM digiampietro/gns3-large
+
+RUN  apt-get update
+
+RUN  apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y xrdp xfce4 xfce4-goodies tightvncserver wget
+
+RUN curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
+
+RUN useradd -m -s /bin/bash gns3
+RUN usermod -aG docker gns3
+
+RUN echo xfce4-session> /home/gns3/.xsession && cp /home/gns3/.xsession /etc/skel && sed -i '0,/-1/s//ask-1/' /etc/xrdp/xrdp.ini && service xrdp restart
+
+RUN wget https://www.dropbox.com/s/9n144s8hwvbblik/c3725-adventerprisek9-mz.124-12.bin
+
+ENTRYPOINT cd /src/misc ; ./startup.sh
