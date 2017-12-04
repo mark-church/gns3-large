@@ -1,4 +1,3 @@
-# Version: 0.7.1
 FROM ubuntu:14.04
 MAINTAINER Valerio Di Giampietro "valerio@digiampietro.com"
 #
@@ -17,7 +16,17 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # install needed packages to build and run gns3 and related sw
 #
 RUN apt-get update
-RUN apt-get -y install git wget
+RUN apt-get -y install git wget apt-transport-https ca-certificates curl software-properties-common
+
+# ----------------------------------------------------------------- 
+# Install Docker and VNC
+#
+RUN apt-get install -y xrdp xfce4 xfce4-goodies tightvncserver wget
+RUN curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
+# ----------------------------------------------------------------- 
+
+
+
 RUN apt-get -y install libpcap-dev uuid-dev libelf-dev cmake
 RUN apt-get -y install python3-setuptools python3-pyqt4 python3-ws4py
 RUN apt-get -y install python3-netifaces python3-zmq python3-tornado python3-dev
@@ -85,7 +94,23 @@ RUN apt-get -y install qemu
 #
 RUN apt-get -y install uml-utilities iptables
 #
-# ---------------------------------------------------------------------------
+# 
+# ----------------------------------------------------------------- 
+# Configure user, VNC, and download IOS image
+#
+RUN useradd -m -s /bin/bash gns3
+RUN usermod -aG docker gns3
+
+RUN echo xfce4-session> /home/gns3/.xsession && cp /home/gns3/.xsession /etc/skel && sed -i '0,/-1/s//ask-1/' /etc/xrdp/xrdp.ini && service xrdp restart
+
+RUN wget https://www.dropbox.com/s/9n144s8hwvbblik/c3725-adventerprisek9-mz.124-12.bin
+# ----------------------------------------------------------------- 
+
+
+
+
+
+---------------------------------------------------------------------------
 # these links are needed to run IOU
 #
 RUN ln -s /usr/lib/i386-linux-gnu/libcrypto.so /usr/lib/i386-linux-gnu/libcrypto.so.4

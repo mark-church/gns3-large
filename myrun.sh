@@ -40,5 +40,6 @@ sudo docker run -h gns3-large                     \
                 -e GROUTE2GNS3=$GROUTE2GNS3       \
                 -e GRUNXTERM=$GRUNXTERM           \
                 --privileged                      \
-                -it digiampietro/gns3-large
+                -p 3389:3389                      \
+                -it chrch/gns3:1.2
 
